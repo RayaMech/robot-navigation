@@ -47,7 +47,7 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 
 | Forward | Backward | Stop |
 |---------|----------|------|
-| ![Forward QR](images/forward_qr.png) | ![Backward QR](images/backward_qr.png) | ![Stop QR](images/stop_qr.png) |
+| ![Forward QR](images/forward.jpg) | ![Backward QR](images/backward.jpg) | ![Stop QR](images/stop.jpg) |
 
 ---
 
@@ -64,31 +64,39 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 
 1. **Cloner le dépôt**
 
+Bien sûr, je te reformate tout ça proprement avec la bonne syntaxe Markdown et les blocs de code corrects :
+
+markdown
+Copy
+Edit
+## Installation et utilisation
+
+### Cloner le dépôt
+
 ```bash
 git clone https://github.com/RayaMech/robot-navigation.git
 cd robot-navigation
 Construire l’image Docker
-
 bash
-Copy code
+Copy
+Edit
 docker build -t robot-navigation:latest .
 Lancer le système
-
 bash
-Copy code
+Copy
+Edit
 docker run --privileged -p 5000:5000 -p 8554:8554 -p 1883:1883 robot-navigation:latest
 Accéder à l’interface web
-
 Ouvrir dans un navigateur :
 
 cpp
-Copy code
+Copy
+Edit
 http://<IP_RASPBERRY_PI>:5000
 Mode automatique / manuel
+Mode automatique : le robot suit les QR codes détectés.
 
-En mode automatique : le robot suit les QR codes détectés.
-
-En mode manuel : contrôle moteur via l’interface web.
+Mode manuel : contrôle moteur via l’interface web.
 
 Utilisation
 Pour arrêter le programme, appuyer sur q dans la fenêtre OpenCV ou arrêter le conteneur Docker.
