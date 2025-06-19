@@ -47,7 +47,7 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 
 | Forward | Backward | Stop |
 |---------|----------|------|
-| ![Forward QR](images/forward.jpg) | ![Backward QR](images/backward.jpg) | ![Stop QR](images/stop.jpg) |
+| ![Forward QR](images/Forward.jpg) | ![Backward QR](images/backward.jpg) | ![Stop QR](images/stop.jpg) |
 
 ---
 
@@ -55,59 +55,68 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 
 - Raspberry Pi 4 (64-bit)
 - Docker et Docker Compose installés
-- MQTT broker (ex: Mosquitto) accessible localement ou sur le réseau
+- MQTT broker accessible localement ou sur le réseau
 - Accès réseau au Raspberry Pi (pour interface web et streaming caméra)
 
 ---
 
 ## Installation et déploiement
 
-1. **Cloner le dépôt**
-
-Bien sûr, je te reformate tout ça proprement avec la bonne syntaxe Markdown et les blocs de code corrects :
-
-markdown
-Copy
-Edit
-## Installation et utilisation
 
 ### Cloner le dépôt
 
 ```bash
 git clone https://github.com/RayaMech/robot-navigation.git
 cd robot-navigation
-Construire l’image Docker
-bash
-Copy
-Edit
+
+---
+
+### Construire l’image Docker
+
+```bash
 docker build -t robot-navigation:latest .
-Lancer le système
-bash
-Copy
-Edit
-docker run --privileged -p 5000:5000 -p 8554:8554 -p 1883:1883 robot-navigation:latest
-Accéder à l’interface web
+
+---
+
+### Lancer le système
+
+```bash
+docker run -it --privileged --network host -v /dev/:/dev/ --env UDEV=1 --device /dev:/dev robot-navigation:latest
+
+---
+
+### Accéder à l’interface web
 Ouvrir dans un navigateur :
 
-cpp
-Copy
-Edit
+```bash
 http://<IP_RASPBERRY_PI>:5000
-Mode automatique / manuel
+
+---
+
+### Mode automatique / manuel
+
 Mode automatique : le robot suit les QR codes détectés.
 
 Mode manuel : contrôle moteur via l’interface web.
 
-Utilisation
+---
+
+## Utilisation
 Pour arrêter le programme, appuyer sur q dans la fenêtre OpenCV ou arrêter le conteneur Docker.
 
 Le mode peut être basculé via l’interface web.
 
-Contribution
+---
+
+## Contribution
 N’hésitez pas à proposer des améliorations, ouvrir des issues ou pull requests.
 
-Licence
+---
+
+## Licence
 Ce projet est sous licence MIT.
 
-Contact
+---
+
+##Contact
 Rayane Mechik - rayane.mechik.etu@univ-lille.fr
