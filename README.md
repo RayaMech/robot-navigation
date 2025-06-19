@@ -68,6 +68,7 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 ```bash
 git clone https://github.com/RayaMech/robot-navigation.git
 cd robot-navigation
+```
 
 ---
 
@@ -75,6 +76,7 @@ cd robot-navigation
 
 ```bash
 docker build -t robot-navigation:latest .
+```
 
 ---
 
@@ -82,6 +84,7 @@ docker build -t robot-navigation:latest .
 
 ```bash
 docker run -it --privileged --network host -v /dev/:/dev/ --env UDEV=1 --device /dev:/dev robot-navigation:latest
+```
 
 ---
 
@@ -90,6 +93,7 @@ Ouvrir dans un navigateur :
 
 ```bash
 http://<IP_RASPBERRY_PI>:5000
+```
 
 ---
 
