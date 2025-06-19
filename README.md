@@ -33,6 +33,24 @@ Ce projet est une application complète pour un robot basé sur Raspberry Pi qui
 
 ---
 
+## Contrôle simplifié par QR Codes
+
+Pour simplifier au maximum la navigation et le contrôle du robot, nous utilisons trois QR codes spécifiques représentant les commandes :
+
+- **Forward** : pour avancer
+- **Backward** : pour reculer
+- **Stop** : pour arrêter
+
+Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans nécessiter d’interface complexe. Cela permet un contrôle intuitif et facile, notamment en mode automatique, où le robot suit les instructions visuelles détectées.
+
+### Exemple visuel des QR codes
+
+| Forward | Backward | Stop |
+|---------|----------|------|
+| ![Forward QR](images/forward_qr.png) | ![Backward QR](images/backward_qr.png) | ![Stop QR](images/stop_qr.png) |
+
+---
+
 ## Prérequis
 
 - Raspberry Pi 4 (64-bit)
