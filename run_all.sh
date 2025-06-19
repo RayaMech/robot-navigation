@@ -11,7 +11,7 @@ source env/bin/activate
 sudo ./motor_control &
 
 # Lancer le serveur web
-python3 web_server.py > flask.log 2>&1 &
+python3 web_server.py 
 
 # Lancer le script Python (QR Code Reader)
 python3 app_qr_code.py 

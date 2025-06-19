@@ -3,6 +3,9 @@ import subprocess
 import time
 import paho.mqtt.client as mqtt
 import os
+import socket
+import fcntl
+import struct
 
 
 # --- Disable GUI ---
@@ -29,6 +32,25 @@ mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
 mqtt_client.loop_start()
 mqtt_client.subscribe(MODE_TOPIC)
 
+# --- Get IP Adress ---
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(
+        fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15].encode('utf-8'))
+        )[20:24]
+    )
+
+ip = get_ip_address('wlan0')
+if ip:
+    stream_url = f"tcp://{ip}:8554"
+    print("Stream URL:", stream_url)
+else:
+    print("Could not get IP address for wlan0")
+
+
 # --- Start libcamera-vid process ---
 libcamera_command = [
     "libcamera-vid", "-t", "0", "--inline", "--listen",
@@ -40,7 +62,7 @@ print("libcamera-vid launched. Waiting for initialization...")
 time.sleep(2)
 
 # --- OpenCV Stream Setup ---
-stream_url = "tcp://192.168.1.28:8554"  # Replace with your Pi IP
+stream_url = f"tcp://{ip}:8554"  # Replace with your Pi IP
 cap = cv2.VideoCapture(stream_url)
 detector = cv2.QRCodeDetector()
 
