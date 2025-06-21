@@ -4,12 +4,6 @@
 #sudo pigpiod
 #sleep1
 
-# Start Mosquitto broker in background
-mosquitto -c /etc/mosquitto/mosquitto.conf &
-
-# Optional: wait a bit for Mosquitto to initialize
-sleep 1
-
 # Activate virutal environment
 source env/bin/activate
 
@@ -17,8 +11,9 @@ source env/bin/activate
 sudo ./motor_control &
 
 # Lancer le serveur web
-python3 web_server.py &
+python3 web_server.py 
 
 # Lancer le script Python (QR Code Reader)
-python3 app_qr_code.py
+python3 app_qr_code.py 
+
 

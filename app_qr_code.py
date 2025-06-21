@@ -7,12 +7,13 @@ import socket
 import fcntl
 import struct
 
+print(">>> QR script started.")
 
 # --- Disable GUI ---
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 # --- Configuration ---
-MQTT_BROKER = "localhost"  # Or IP of your MQTT broker
+MQTT_BROKER = "127.0.0.1"  # Or IP of your MQTT broker
 MQTT_PORT = 1883
 MQTT_TOPIC = "qr/navigation"
 MODE_TOPIC = "qr/mode"
@@ -32,7 +33,19 @@ mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
 mqtt_client.loop_start()
 mqtt_client.subscribe(MODE_TOPIC)
 
-# --- Get IP Adress ---
+# --- Verify MQTT connection ---
+for attempt in range(10):
+    try:
+        mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+        break
+    except Exception as e:
+        print(f"MQTT connection failed: {e}, retrying in 2s...")
+        time.sleep(2)
+else:
+    print("Failed to connect to MQTT broker after multiple attempts.")
+    exit(1)
+
+# --- Get IP Address ---
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(
@@ -43,18 +56,17 @@ def get_ip_address(ifname):
         )[20:24]
     )
 
-ip = get_ip_address('wlan0')
+ip = get_ip_address('end0')
 if ip:
-    stream_url = f"tcp://{ip}:8554"
+    stream_url = f"http://{ip}:8554"
     print("Stream URL:", stream_url)
 else:
-    print("Could not get IP address for wlan0")
-
+    print("Could not get IP address for end0")
 
 # --- Start libcamera-vid process ---
 libcamera_command = [
     "libcamera-vid", "-t", "0", "--inline", "--listen",
-    "-o", "tcp://0.0.0.0:8554", "--width", "640", "--height", "480", "--framerate", "15"
+    "-o", "http://0.0.0.0:8554", "--width", "640", "--height", "480", "--framerate", "15"
 ]
 
 libcamera_process = subprocess.Popen(libcamera_command)
@@ -62,7 +74,6 @@ print("libcamera-vid launched. Waiting for initialization...")
 time.sleep(2)
 
 # --- OpenCV Stream Setup ---
-stream_url = f"tcp://{ip}:8554"  # Replace with your Pi IP
 cap = cv2.VideoCapture(stream_url)
 detector = cv2.QRCodeDetector()
 
@@ -83,8 +94,11 @@ while True:
             cv2.line(img, pt1, pt2, color=(255, 0, 0), thickness=2)
 
         if data:
-            cv2.putText(img, data, (int(bbox[0][0][0]), int(bbox[0][0][1]) - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 250, 120), 2)
+            cv2.putText(
+                img, data,
+                (int(bbox[0][0][0]), int(bbox[0][0][1]) - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 250, 120), 2
+            )
             print("QR Code detected:", data)
 
             if mode == "AUTO":
@@ -92,16 +106,14 @@ while True:
                 print(f"[MQTT] Sent '{data}' to {MQTT_TOPIC}")
             else:
                 print(f"[SKIPPED] Not sending '{data}' (Manual mode)")
-	
-	
-    #cv2.imshow("QR Code Detector", img)
-    #if cv2.waitKey(1) == ord("q"):
-    #    break
-    
+
+    # cv2.imshow("QR Code Detector", img)
+    # if cv2.waitKey(1) == ord("q"):
+    #     break
 
 # --- Cleanup ---
 cap.release()
-cv2.destroyAllWindows()
 mqtt_client.loop_stop()
 mqtt_client.disconnect()
 libcamera_process.terminate()
+
