@@ -62,7 +62,7 @@ Ces QR codes peuvent être affichés devant la caméra pour guider le robot sans
 
 ## Setup Hardware
 
-![Setup1](images/setup1.jpg) | ![Setup2](setup2.jpg) |
+![Setup1](images/setup1.jpg) | ![Setup2](images/setup2.jpg) |
 
 ## Installation et déploiement
 
